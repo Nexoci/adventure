@@ -34,7 +34,6 @@ scl_rgt = pygame.transform.scale(rgt, (20, 20))
 font = pygame.font.SysFont('Consolas', 10)
 font2= pygame.font.SysFont('Arial', 20)
 font_win=pygame.font.SysFont('Fixedsys',100)
-win=False
 window = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT), pygame.HWSURFACE)
 pygame.display.set_caption("Adventure")
 def display():
