@@ -16,6 +16,7 @@ def gridHelp(window,WINDOW_WIDTH,WINDOW_HEIGHT):
             pygame.draw.line(window,(255,0,0),(gridX,0),(gridX,WINDOW_HEIGHT))
         for gridY in range(0, WINDOW_HEIGHT, spacer):
             pygame.draw.line(window,(255,0,0),(0,gridY),(WINDOW_WIDTH,gridY))     
+#Game Settings
 fps = 30
 fpsClock = pygame.time.Clock()
 WINDOW_WIDTH = 700
@@ -23,22 +24,28 @@ WINDOW_HEIGHT = 700
 move_x=40
 move_y=40
 speed = 5
+#Controls Images
 up = pygame.image.load('images/up.png')
 dwn = pygame.image.load('images/down.png')
 lft = pygame.image.load('images/lft.png')
 rgt= pygame.image.load('images/rgt.png')
+#Scaling Images
 scl_up = pygame.transform.scale(up, (20, 20))
 scl_dwm = pygame.transform.scale(dwn, (20, 20))
 scl_lft = pygame.transform.scale(lft, (20, 20))
 scl_rgt = pygame.transform.scale(rgt, (20, 20))
+#Loading Fonts
 font = pygame.font.SysFont('Consolas', 10)
 font2= pygame.font.SysFont('Arial', 20)
 font_win=pygame.font.SysFont('Fixedsys',100)
+#Setting Up Window
 window = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT), pygame.HWSURFACE)
 pygame.display.set_caption("Adventure")
+#Actual Maze
 def display():
     global walls,player,speed,won,btn_rst
     window.fill((255,255,255))#White background
+    #Maze Walls
     mz_edge_R=pygame.draw.rect(window,(237,199,95),(670,0,50,700))
     mz_edge_L=pygame.draw.rect(window,(237,199,95),(-20,0,50,700))
     mz_edge_TP=pygame.draw.rect(window,(237,199,95),(-20,-20,700,50))
@@ -76,7 +83,9 @@ def display():
     wall29=pygame.draw.rect(window,(237,199,95),(330,530,40,160))
     wall30=pygame.draw.rect(window,(237,199,95),(510,630,40,40))
     wall31=pygame.draw.rect(window,(237,199,95),(410,490,140,60))
+    #Player
     player=pygame.draw.rect(window,(50, 102, 168),(move_x,move_y,20,20))
+    #Placing Control Images and Text to help the player
     up_k=window.blit(scl_up,(75, 5))
     dwn_k=window.blit(scl_dwm,(205, 5))
     lft_k=window.blit(scl_lft,(355, 5))
@@ -88,14 +97,18 @@ def display():
     goal_txt= window.blit(font2.render("Goal: Reach The Green Square", True, (0, 0, 0)), (205, 675))
     #gridHelp(window,WINDOW_WIDTH,WINDOW_HEIGHT)
     walls=[mz_edge_BT,mz_edge_L,mz_edge_R,mz_edge_TP,wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24,wall25,wall26,wall27,wall28,wall29,wall30,wall31]
+    #Win Function
     won=False
+    #If player gets objective/collides with it they win
     if collision(player, objective):
+        #Sets to have won
         won=True
     if won:
+        #Shows A "You Win" message and sets speed to 0 so the player cant keep moving and a reset button if they want to play again
         window.blit(font_win.render("You Win!", True, (119, 252, 3)), (215, 275))
         btn_rst = window.blit(font_win.render("Play Again", True, (0, 0, 0)), (180, 350))
         speed=0
-        
+#Collision def       
 def collision(object1, object2):
     return object1.colliderect(object2)
    
@@ -109,19 +122,21 @@ while True:
         key_input = pygame.key.get_pressed()
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             pos = pygame.mouse.get_pos()
+            #If they click the rest button the game will reset
             if btn_rst.collidepoint(pos):
                 won=False
                 move_x=40
                 move_y=40
                 speed=5
  
-#var--------value name-----key Left---speed value--value name------key Right---speed value      
+    #Gives the player the ability to actually move      
     movex = (key_input[pygame.K_LEFT] * -speed) + (key_input[pygame.K_RIGHT] * speed)
     movey = (key_input[pygame.K_UP] * -speed) + (key_input[pygame.K_DOWN] * speed)
     move_x += movex
     move_y += movey
     
     display()
+    #Collion setting so the player cannot clip through walls
     for i in walls:
         if collision(player,i):
             move_x -= movex
