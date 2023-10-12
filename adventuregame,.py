@@ -20,24 +20,16 @@ def gridHelp(window,WINDOW_WIDTH,WINDOW_HEIGHT):
 fps = 30
 fpsClock = pygame.time.Clock()
 WINDOW_WIDTH = 700
-WINDOW_HEIGHT = 700
+WINDOW_HEIGHT = 800
 move_x=40
 move_y=40
 speed = 5
-#Controls Images
-up = pygame.image.load('images/up.png')
-dwn = pygame.image.load('images/down.png')
-lft = pygame.image.load('images/lft.png')
-rgt= pygame.image.load('images/rgt.png')
-#Scaling Images
-scl_up = pygame.transform.scale(up, (20, 20))
-scl_dwm = pygame.transform.scale(dwn, (20, 20))
-scl_lft = pygame.transform.scale(lft, (20, 20))
-scl_rgt = pygame.transform.scale(rgt, (20, 20))
 #Loading Fonts
 font = pygame.font.SysFont('Consolas', 10)
 font2= pygame.font.SysFont('Arial', 20)
 font_win=pygame.font.SysFont('Fixedsys',100)
+key_org = pygame.image.load('images/key.png') #with .png or .jpb included in the name
+key = pygame.transform.scale(key_org, (40, 40))  #resize image Where 35 ,35 is the size, (x,y)
 #Setting Up Window
 window = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT), pygame.HWSURFACE)
 pygame.display.set_caption("Adventure")
@@ -49,7 +41,7 @@ def display():
     mz_edge_R=pygame.draw.rect(window,(237,199,95),(670,0,50,700))
     mz_edge_L=pygame.draw.rect(window,(237,199,95),(-20,0,50,700))
     mz_edge_TP=pygame.draw.rect(window,(237,199,95),(-20,-20,700,50))
-    mz_edge_BT=pygame.draw.rect(window,(237,199,95),(-20,670,700,50))
+    mz_edge_BT=pygame.draw.rect(window,(237,199,95),(-20,670,750,150))
     objective=pygame.draw.rect(window,(12,235,56),(650,630,20,40))
     objective1=pygame.draw.rect(window,(12,235,56),(630,630,20,40))
     wall1=pygame.draw.rect(window,(237,199,95),(70,70,300,40))
@@ -83,20 +75,18 @@ def display():
     wall29=pygame.draw.rect(window,(237,199,95),(330,530,40,160))
     wall30=pygame.draw.rect(window,(237,199,95),(510,630,40,40))
     wall31=pygame.draw.rect(window,(237,199,95),(410,490,140,60))
+    btn_rst = window.blit(font2.render(f"Restart", True, (0, 0, 0)), (610, 3))
+    help_txt1 = window.blit(font2.render("Use the arrow keys on your keyboard to move your character (the blue square). Up arrow is", True, (0, 0, 0)), (10, 725))
+    help_txt2 = window.blit(font2.render("to move up, left arrow you move left, right arrow you move right, and down arrow you move", True, (0, 0, 0)), (10, 740))
+    help_txt3 = window.blit(font2.render("down", True, (0, 0, 0)), (10, 755))
+    help_txt4 = window.blit(font2.render("How To Play:", True, (0, 0, 0)), (300, 705))
     #Player
     player=pygame.draw.rect(window,(50, 102, 168),(move_x,move_y,20,20))
     #Placing Control Images and Text to help the player
-    up_k=window.blit(scl_up,(75, 5))
-    dwn_k=window.blit(scl_dwm,(205, 5))
-    lft_k=window.blit(scl_lft,(355, 5))
-    rgt_k=window.blit(scl_rgt,(495, 5))
-    up_txt= window.blit(font2.render("Move Up", True, (0, 0, 0)), (100,5))
-    dwn_txt= window.blit(font2.render("Move Down", True, (0, 0, 0)), (230,5))
-    lft_txt= window.blit(font2.render("Move Left", True, (0, 0, 0)), (380,5))
-    rgt_txt= window.blit(font2.render("Move Right", True, (0, 0, 0)), (520,5))
-    goal_txt= window.blit(font2.render("Goal: Reach The Green Square", True, (0, 0, 0)), (205, 675))
+    goal_txt= window.blit(font2.render("Goal: Reach The Green Square", True, (0, 0, 0)), (220, 675))
     #gridHelp(window,WINDOW_WIDTH,WINDOW_HEIGHT)
     walls=[mz_edge_BT,mz_edge_L,mz_edge_R,mz_edge_TP,wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8,wall9,wall10,wall11,wall12,wall13,wall14,wall15,wall16,wall17,wall18,wall19,wall20,wall21,wall22,wall23,wall24,wall25,wall26,wall27,wall28,wall29,wall30,wall31]
+        
     #Win Function
     won=False
     #If player gets objective/collides with it they win
@@ -106,7 +96,6 @@ def display():
     if won:
         #Shows A "You Win" message and sets speed to 0 so the player cant keep moving and a reset button if they want to play again
         window.blit(font_win.render("You Win!", True, (119, 252, 3)), (215, 275))
-        btn_rst = window.blit(font_win.render("Play Again", True, (0, 0, 0)), (180, 350))
         speed=0
 #Collision def       
 def collision(object1, object2):
@@ -122,7 +111,7 @@ while True:
         key_input = pygame.key.get_pressed()
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             pos = pygame.mouse.get_pos()
-            #If they click the rest button the game will reset
+            #If they click the reset button the game will reset
             if btn_rst.collidepoint(pos):
                 won=False
                 move_x=40
@@ -141,6 +130,7 @@ while True:
         if collision(player,i):
             move_x -= movex
             move_y -= movey
+            display()
        
     pygame.display.update() #update the display
     fpsClock.tick(fps) #speed of redraw
